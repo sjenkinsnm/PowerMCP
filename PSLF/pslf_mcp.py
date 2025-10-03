@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Tuple, Any, Union
 mcp = FastMCP("PSLF Positive Sequence Load Flow Program")
 
 from PSLF_PYTHON import *
-init_pslf(silent=True, working_directory=os.getcwd())
+init_pslf(silent=False, working_directory=os.getcwd())
 
 @power_mcp_tool(mcp)
 def open_case(case: str) -> Dict[str, Any]:

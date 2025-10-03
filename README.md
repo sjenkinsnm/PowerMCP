@@ -80,9 +80,14 @@ Or for PowerWorld.
   }
 }
 ```
-4) Start the MCP server, replacing the model name and config file with your preferred option.
+4) Start the MCP server in interactive mode, use the following command. Replace the model name and config file with your preferred option.
 ```
-mcphost -m ollama:qwen3:4b --config .\config.json
+mcphost -m ollama:qwen3:4b --config .\config.json --system-prompt .\system-prompt.md
+```
+
+To run a test prompt that runs the LLM through a test and saves the output to a report, use the following command.
+```
+mcphost script pslf_test.prompt
 ```
 
 ### Video Demos
