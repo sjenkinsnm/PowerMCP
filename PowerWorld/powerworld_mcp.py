@@ -17,6 +17,24 @@ def _get_saw(case_path: Optional[str] = None) -> SAW:
     global _saw
     if _saw is None and case_path is not None:
         try:
+            # Validate case_path input
+        if not case_path or not isinstance(case_path, str):
+            return PowerError(
+                status='error',
+                message="case_path must be a non-empty string"
+            )
+
+        if not os.path.exists(case_path):
+            return PowerError(
+                status='error',
+                message=f"Case file not found: {case_path}"
+            )
+
+        if not case_path.lower().endswith((".pwb", ".pwd")):
+            return PowerError(
+                status='error',
+                message="Unsupported case file format. Expected .pwb or .pwd"
+            )
             _saw = SAW(case_path, UIVisible=True)
         except PowerWorldError as e:
             print(f"Error initializing SAW: {str(e)}")
