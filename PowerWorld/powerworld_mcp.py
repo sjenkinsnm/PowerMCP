@@ -17,7 +17,18 @@ def _get_saw(case_path: Optional[str] = None) -> SAW:
     global _saw
     if _saw is None and case_path is not None:
         try:
-            # Validate case_path input
+            _saw = SAW(case_path, UIVisible=True)
+        except PowerWorldError as e:
+            print(f"Error initializing SAW: {str(e)}")
+            raise
+    elif _saw is None:
+        raise ValueError("No case is currently open. Please open a case first.")
+    return _saw
+
+@power_mcp_tool(mcp)
+def open_case(case_path: str) -> Dict[str, Any]:
+    try:
+        # Validate case_path input
         if not case_path or not isinstance(case_path, str):
             return PowerError(
                 status='error',
@@ -35,16 +46,6 @@ def _get_saw(case_path: Optional[str] = None) -> SAW:
                 status='error',
                 message="Unsupported case file format. Expected .pwb or .pwd"
             )
-            _saw = SAW(case_path, UIVisible=True)
-        except PowerWorldError as e:
-            print(f"Error initializing SAW: {str(e)}")
-            raise
-    elif _saw is None:
-        raise ValueError("No case is currently open. Please open a case first.")
-    return _saw
-
-@power_mcp_tool(mcp)
-def open_case(case_path: str) -> Dict[str, Any]:
     """
     Open a PowerWorld case file.
     
