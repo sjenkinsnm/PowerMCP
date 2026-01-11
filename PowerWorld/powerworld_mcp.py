@@ -27,6 +27,15 @@ def _get_saw(case_path: Optional[str] = None) -> SAW:
 
 @power_mcp_tool(mcp)
 def open_case(case_path: str) -> Dict[str, Any]:
+    """
+    Open a PowerWorld case file.
+    
+    Args:
+        case_path: Path to the PowerWorld case file
+    
+    Returns:
+        Dict with status and case information
+    """
     try:
         # Validate case_path input
         if not case_path or not isinstance(case_path, str):
@@ -46,24 +55,15 @@ def open_case(case_path: str) -> Dict[str, Any]:
                 status='error',
                 message="Unsupported case file format. Expected .pwb or .pwd"
             )
-    """
-    Open a PowerWorld case file.
-    
-    Args:
-        case_path: Path to the PowerWorld case file
-    
-    Returns:
-        Dict with status and case information
-    """
-    try:
+
         # Initialize SAW with the case
         saw = _get_saw(case_path)
-        
+
         # Get basic case information
         bus_data = saw.get_power_flow_results('bus')
         branch_data = saw.get_power_flow_results('branch')
         gen_data = saw.get_power_flow_results('gen')
-        
+
         return {
             'status': 'success',
             'case_info': {
@@ -78,7 +78,6 @@ def open_case(case_path: str) -> Dict[str, Any]:
             status='error',
             message=str(e)
         )
-
 @power_mcp_tool(mcp)
 def run_powerflow(solution_method: str = 'RECTNEWT') -> Dict[str, Any]:
     """
@@ -201,7 +200,6 @@ def analyze_contingencies(option: str = "N-1", validate: bool = False) -> Dict[s
                     params = ['BusNum', 'BusNum:1', 'LineCircuit', 'LineStatus']
                     values = [from_bus, to_bus, circuit, 'OPEN']
                     saw.ChangeParametersMultipleElement('branch', params, [values])
-                    
                     # Solve power flow
                     saw.SolvePowerFlow()
                     
