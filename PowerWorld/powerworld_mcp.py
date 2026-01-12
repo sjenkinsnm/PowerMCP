@@ -50,6 +50,11 @@ def open_case(case_path: str) -> Dict[str, Any]:
                 message=f"Case file not found: {case_path}"
             )
 
+        if not os.path.isfile(case_path):
+            return PowerError(
+                status='error',
+                message=f"Case path is not a file: {case_path}"
+            )
         if not case_path.lower().endswith((".pwb", ".pwd")):
             return PowerError(
                 status='error',
