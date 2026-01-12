@@ -38,12 +38,17 @@ def open_case(case_path: str) -> Dict[str, Any]:
     """
     try:
         # Validate case_path input
-        if not case_path or not isinstance(case_path, str):
+        if not isinstance(case_path, str):
             return PowerError(
                 status='error',
-                message="case_path must be a non-empty string"
+                message="case_path must be a string"
             )
 
+        if not case_path:
+            return PowerError(
+                status='error',
+                message="case_path cannot be empty"
+            )
         if not os.path.exists(case_path):
             return PowerError(
                 status='error',
