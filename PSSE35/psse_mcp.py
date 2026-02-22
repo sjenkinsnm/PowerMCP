@@ -6,7 +6,7 @@ from common.utils import PowerError, power_mcp_tool
 from typing import Dict, List, Optional, Tuple, Any, Union
 
 # Initialize MCP server
-mcp = FastMCP("PSLF Positive Sequence Load Flow Program")
+mcp = FastMCP("PSSE 35 Steady State Powerflow Tool")
 
 # Import and initialize PSSE Python library
 # If PSSE is not in your path, run "C:\Program Files\PTI\PSSE36\36.0\SET_PSSE_PATH.BAT" from your PSSE install directory

@@ -90,6 +90,16 @@ To run a test prompt that runs the LLM through a test and saves the output to a 
 mcphost script pslf_test.prompt
 ```
 
+To run with an Ollama server on your local network, set OLLAMA_HOST environment variable to your IP or set --provider-url
+```
+mcphost --provider-url=http://192.168.1.2:30068 -m ollama:qwen3:4b --config .\config.json --system-prompt .\system-prompt.md
+```
+or
+```
+set OLLAMA_HOST=192.168.1.2:30068
+mcphost -m ollama:qwen3:4b --config .\config.json --system-prompt .\system-prompt.md
+```
+
 ### Video Demos
 
 Check out these demos showcasing PowerMCP in action:

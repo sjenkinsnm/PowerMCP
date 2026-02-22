@@ -3,7 +3,7 @@ mcpServers:
   pslf:
     command: ["python", "PSLF/pslf_mcp.py"]
 model: "google:gemini-2.0-flash"
-provider-api-key: "get your key at https://aistudio.google.com/app/apikey"
+provider-api-key: # get your key at https://aistudio.google.com/app/apikey
 stream: false
 compact: true
 prompt: |
