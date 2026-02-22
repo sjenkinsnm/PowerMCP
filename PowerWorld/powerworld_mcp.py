@@ -37,14 +37,43 @@ def open_case(case_path: str) -> Dict[str, Any]:
         Dict with status and case information
     """
     try:
+        # Validate case_path input
+        if not isinstance(case_path, str):
+            return PowerError(
+                status='error',
+                message="case_path must be a string"
+            )
+
+        if not case_path:
+            return PowerError(
+                status='error',
+                message="case_path cannot be empty"
+            )
+        if not os.path.exists(case_path):
+            return PowerError(
+                status='error',
+                message=f"Case file not found: {case_path}"
+            )
+
+        if not os.path.isfile(case_path):
+            return PowerError(
+                status='error',
+                message=f"Case path is not a file: {case_path}"
+            )
+        if not case_path.lower().endswith((".pwb", ".pwd")):
+            return PowerError(
+                status='error',
+                message="Unsupported case file format. Expected .pwb or .pwd"
+            )
+
         # Initialize SAW with the case
         saw = _get_saw(case_path)
-        
+
         # Get basic case information
         bus_data = saw.get_power_flow_results('bus')
         branch_data = saw.get_power_flow_results('branch')
         gen_data = saw.get_power_flow_results('gen')
-        
+
         return {
             'status': 'success',
             'case_info': {
@@ -59,7 +88,6 @@ def open_case(case_path: str) -> Dict[str, Any]:
             status='error',
             message=str(e)
         )
-
 @power_mcp_tool(mcp)
 def run_powerflow(solution_method: str = 'RECTNEWT') -> Dict[str, Any]:
     """
@@ -182,7 +210,6 @@ def analyze_contingencies(option: str = "N-1", validate: bool = False) -> Dict[s
                     params = ['BusNum', 'BusNum:1', 'LineCircuit', 'LineStatus']
                     values = [from_bus, to_bus, circuit, 'OPEN']
                     saw.ChangeParametersMultipleElement('branch', params, [values])
-                    
                     # Solve power flow
                     saw.SolvePowerFlow()
                     
