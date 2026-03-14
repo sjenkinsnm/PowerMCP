@@ -1,5 +1,7 @@
 .venv/
 **/__pycache__/**
+.claude/
+.gemini/
 soln.log
 output.crf
 output.sum
