@@ -139,7 +139,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 ### Core Team
-- [Qian Zhang](https://www.linkedin.com/in/qian-zhang-75323111b/), [Muhy Eddin Za’ter](https://scholar.google.com/citations?user=_IFFYFAAAAAJ&hl=en), [Stephen Jenkins](https://www.linkedin.com/in/stephenjenkins2/), [Maanas Goel](https://www.linkedin.com/in/maanas-goel/)
+- [Qian Zhang](https://www.linkedin.com/in/qian-zhang-75323111b/), [Muhy Eddin Za’ter](https://scholar.google.com/citations?user=_IFFYFAAAAAJ&hl=en), [Stephen Jenkins](https://www.linkedin.com/in/stephenjenkins2/), [Maanas Goel](https://www.linkedin.com/in/maanas-goel/), [Steven Black] (https://www.linkedin.com/in/steven-black-09322b31/)
 
 ### Special Thanks
 - All contributors who help make this project better
