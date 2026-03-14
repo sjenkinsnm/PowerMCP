@@ -1,10 +1,8 @@
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from typing import Dict, List, Optional, Tuple, Any, Union
 from mcp.server.fastmcp import FastMCP
 from esa import SAW, PowerWorldError
-from common.utils import PowerError, power_mcp_tool
 
 # Initialize MCP server
 mcp = FastMCP("PowerWorld Analysis Server")
@@ -25,7 +23,7 @@ def _get_saw(case_path: Optional[str] = None) -> SAW:
         raise ValueError("No case is currently open. Please open a case first.")
     return _saw
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def open_case(case_path: str) -> Dict[str, Any]:
     """
     Open a PowerWorld case file.
@@ -39,32 +37,17 @@ def open_case(case_path: str) -> Dict[str, Any]:
     try:
         # Validate case_path input
         if not isinstance(case_path, str):
-            return PowerError(
-                status='error',
-                message="case_path must be a string"
-            )
+            return {"status": "error", "message": "case_path must be a string"}
 
         if not case_path:
-            return PowerError(
-                status='error',
-                message="case_path cannot be empty"
-            )
+            return {"status": "error", "message": "case_path cannot be empty"}
         if not os.path.exists(case_path):
-            return PowerError(
-                status='error',
-                message=f"Case file not found: {case_path}"
-            )
+            return {"status": "error", "message": f"Case file not found: {case_path}"}
 
         if not os.path.isfile(case_path):
-            return PowerError(
-                status='error',
-                message=f"Case path is not a file: {case_path}"
-            )
+            return {"status": "error", "message": f"Case path is not a file: {case_path}"}
         if not case_path.lower().endswith((".pwb", ".pwd")):
-            return PowerError(
-                status='error',
-                message="Unsupported case file format. Expected .pwb or .pwd"
-            )
+            return {"status": "error", "message": "Unsupported case file format. Expected .pwb or .pwd"}
 
         # Initialize SAW with the case
         saw = _get_saw(case_path)
@@ -84,11 +67,9 @@ def open_case(case_path: str) -> Dict[str, Any]:
             }
         }
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=str(e)
-        )
-@power_mcp_tool(mcp)
+        return {"status": "error", "message": str(e)}
+
+@mcp.tool()
 def run_powerflow(solution_method: str = 'RECTNEWT') -> Dict[str, Any]:
     """
     Run power flow analysis on the currently open case.
@@ -165,17 +146,11 @@ def run_powerflow(solution_method: str = 'RECTNEWT') -> Dict[str, Any]:
         }
         
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def analyze_contingencies(option: str = "N-1", validate: bool = False) -> Dict[str, Any]:
     """
     Run contingency analysis on the currently open case.
@@ -248,17 +223,11 @@ def analyze_contingencies(option: str = "N-1", validate: bool = False) -> Dict[s
             }
             
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_power_flow_results(object_type: str, additional_fields: Optional[List[str]] = None) -> Dict[str, Any]:
     """
     Get power flow results for specified object type with optional additional fields.
@@ -304,17 +273,11 @@ def get_power_flow_results(object_type: str, additional_fields: Optional[List[st
         }
         
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_key_field_list(object_type: str) -> Dict[str, Any]:
     """
     Get the list of key fields for a given object type.
@@ -339,17 +302,11 @@ def get_key_field_list(object_type: str) -> Dict[str, Any]:
             'results': key_fields
         }
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def change_parameters_multiple_element(object_type: str, param_list: List[str], value_list: List[List[Any]]) -> Dict[str, Any]:
     """
     Change parameters for multiple elements of the same type.
@@ -377,17 +334,11 @@ def change_parameters_multiple_element(object_type: str, param_list: List[str], 
             'status': 'success'
         }
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def change_and_confirm_params(object_type: str, command_df: Dict[str, List[Any]]) -> Dict[str, Any]:
     """
     Change parameters using a DataFrame and confirm the changes were respected.
@@ -458,17 +409,11 @@ def change_and_confirm_params(object_type: str, command_df: Dict[str, List[Any]]
             raise e
             
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_ybus(full: bool = False) -> Dict[str, Any]:
     """
     Get the bus admittance matrix (Ybus) of the system.
@@ -514,17 +459,11 @@ def get_ybus(full: bool = False) -> Dict[str, Any]:
             }
         }
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def to_graph(node: str = 'bus', geographic: bool = False, directed: bool = False) -> Dict[str, Any]:
     """
     Convert the power system case to a NetworkX graph representation.
@@ -558,17 +497,11 @@ def to_graph(node: str = 'bus', geographic: bool = False, directed: bool = False
             'results': graph_data
         }
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_jacobian(full: bool = False) -> Dict[str, Any]:
     """
     Get the power flow Jacobian matrix of the system.
@@ -611,17 +544,11 @@ def get_jacobian(full: bool = False) -> Dict[str, Any]:
             }
         }
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_lodf_matrix(precision: int = 3, ignore_open_branch: bool = True, method: str = 'DC') -> Dict[str, Any]:
     """
     Get the Line Outage Distribution Factors (LODF) matrix.
@@ -661,17 +588,11 @@ def get_lodf_matrix(precision: int = 3, ignore_open_branch: bool = True, method:
             }
         }
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def determine_shortest_path(start: str, end: str, branch_distance_measure: str = "X", branch_filter: str = "ALL") -> Dict[str, Any]:
     """
     Find the shortest path between two buses in the power system.
@@ -706,17 +627,11 @@ def determine_shortest_path(start: str, end: str, branch_distance_measure: str =
                 'message': 'No path found between specified buses'
             }
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def run_robustness_analysis() -> Dict[str, Any]:
     """
     Perform robustness analysis on the power system.
@@ -739,17 +654,11 @@ def run_robustness_analysis() -> Dict[str, Any]:
             'results': results
         }
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_ptdf_matrix_fast() -> Dict[str, Any]:
     """
     Get the Power Transfer Distribution Factors (PTDF) matrix using fast calculation method.
@@ -788,15 +697,9 @@ def get_ptdf_matrix_fast() -> Dict[str, Any]:
             }
         }
     except PowerWorldError as e:
-        return PowerError(
-            status='error',
-            message=f"PowerWorld Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"PowerWorld Error: {str(e)}"}
     except Exception as e:
-        return PowerError(
-            status='error',
-            message=f"Unexpected Error: {str(e)}"
-        )
+        return {"status": "error", "message": f"Unexpected Error: {str(e)}"}
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")

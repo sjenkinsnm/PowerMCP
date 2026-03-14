@@ -4,7 +4,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pandas as pd
 import subprocess
 from mcp.server.fastmcp import FastMCP
-from common.utils import PowerError, power_mcp_tool
 from typing import Dict, List, Optional, Tuple, Any, Union
 
 # Initialize MCP server
@@ -13,7 +12,7 @@ mcp = FastMCP("PSLF Positive Sequence Load Flow Program")
 from PSLF_PYTHON import *
 init_pslf(silent=False, working_directory=os.getcwd())
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def open_case(case: str) -> Dict[str, Any]:
     """
     Open a PSLF case file.
@@ -53,12 +52,12 @@ def open_case(case: str) -> Dict[str, Any]:
                 'status': 'error unknown'
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
-@power_mcp_tool(mcp)
+@mcp.tool()
 def save_case() -> Dict[str, Any]:
     """
     Save a PSLF case file to temp.sav
@@ -79,12 +78,12 @@ def save_case() -> Dict[str, Any]:
                 'status': 'error failed to save case'
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def solve_case() -> Dict[str, Any]:
     """
     Solves a powerflow case using PSLF.
@@ -131,12 +130,12 @@ def solve_case() -> Dict[str, Any]:
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def add_bus(busnum: int, busname: str, nominalkv: float, type: int = 1) -> Dict[str, Any]:
     """
     Add a new bus to the power system model
@@ -229,12 +228,12 @@ def add_bus(busnum: int, busname: str, nominalkv: float, type: int = 1) -> Dict[
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def add_branch(frombus: int, tobus: int, reactance: float, circuit: str = "1 ", resistance: float = 0.0, susceptance: float = 0.0, rating: float = 9999.0, section: int = 1) -> Dict[str, Any]:
     """
     Add a new branch (transmission line, transformer, series capacitor, or series reactor) to the power system model
@@ -353,12 +352,12 @@ def add_branch(frombus: int, tobus: int, reactance: float, circuit: str = "1 ", 
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def add_generator(bus: int, power_scheduled_mw: float, genid: str = "1 ", power_max: float = 9999.0, reactive_power_max: float = 9999.0, reactive_power_min: float = -9999.0) -> Dict[str, Any]:
     """
     Add a new generator to the case.
@@ -432,12 +431,12 @@ def add_generator(bus: int, power_scheduled_mw: float, genid: str = "1 ", power_
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
-@power_mcp_tool(mcp)
+@mcp.tool()
 def add_load(bus: int, real_power: float, reactive_power: float, loadid: str = "1 ") -> Dict[str, Any]:
     """
     Add a new load to the case.
@@ -509,12 +508,12 @@ def add_load(bus: int, real_power: float, reactive_power: float, loadid: str = "
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
-@power_mcp_tool(mcp)
+@mcp.tool()
 def add_shunt(bus: int, reactive_power: float, variable_flag: int = 0, reactive_max: float = 0.0, reactive_min: float = 0.0, shuntid: str = "1 ") -> Dict[str, Any]:
     """
     Add a new fixed or variable shunt to the case.
@@ -592,13 +591,13 @@ def add_shunt(bus: int, reactive_power: float, variable_flag: int = 0, reactive_
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
 
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_voltage(bus: int) -> Dict[str, Any]:
     """
     Queries the voltage of a single bus and reports in per unit. If checking multiple buses with thresholds, use get_voltage_violations function instead.
@@ -630,12 +629,12 @@ def get_voltage(bus: int) -> Dict[str, Any]:
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_voltage_violations(overvoltage_threshold: float = 1.05, undervoltage_threshold: float = 0.95) -> Dict[str, Any]:
     """
     Queries all bus voltages, compares against a threshold (default +/- 5%), and reports buses with voltage violations. For querying a single bus without thresholds, use get_voltage instead.
@@ -682,12 +681,12 @@ def get_voltage_violations(overvoltage_threshold: float = 1.05, undervoltage_thr
                 'undervoltage': undervoltage
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_overload_violations(overload_threshold: float = 1.0) -> Dict[str, Any]:
     """
     Queries a list of branches (transmission lines and transformers) with loading above a threshold (default 100%).
@@ -727,12 +726,12 @@ def get_overload_violations(overload_threshold: float = 1.0) -> Dict[str, Any]:
             'overload': overload
         }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
-@power_mcp_tool(mcp)
+@mcp.tool()
 def run_contingency_analysis() -> Dict[str, Any]:
     """
     Generates N-1 contingencies, uses SSTOOLS to run all contingencies, and generates a cross tabulated table of results.
@@ -745,19 +744,16 @@ def run_contingency_analysis() -> Dict[str, Any]:
     try:
         iret = Pslf.save_case(os.getcwd() + "\\sstools.sav")
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
     
     # Generate a list of N-1 contingencies based on the case stored in the temporary file
     try:
         iret = Pslf.run_epcl(os.getcwd() + "\\PSLF\generate-otg.p")
     except Exception as e:
-        return PowerError(
-            status='error generate-otg.p not found',
-            message=str(e)
-        )
+        return {"status": "error generate-otg.p not found", "message": str(e)}
     
     # Generate a list of default criteria to evaluate the case with.
     try:
@@ -778,10 +774,7 @@ def run_contingency_analysis() -> Dict[str, Any]:
         
         
     except Exception as e:
-        return PowerError(
-            status='error creating control.cntl',
-            message=str(e)
-        )
+        return {"status": "error creating control.cntl", "message": str(e)}
     
     # Generate the batch contingency run.
     try:
@@ -796,20 +789,14 @@ def run_contingency_analysis() -> Dict[str, Any]:
         
         
     except Exception as e:
-        return PowerError(
-            status='error creating runs.cases',
-            message=str(e)
-        )
+        return {"status": "error creating runs.cases", "message": str(e)}
         
     # Run the batch of contingencies
     try:
         iret = Pslf.run_sstools("runs.cases")
         
     except Exception as e:
-        return PowerError(
-            status='error running SSTOOLS',
-            message=str(e)
-        )
+        return {"status": "error running SSTOOLS", "message": str(e)}
         
     # Generate the ProvisoHD batch data file
     try:
@@ -822,10 +809,7 @@ def run_contingency_analysis() -> Dict[str, Any]:
             f.write('end\n')
         
     except Exception as e:
-        return PowerError(
-            status='error creating template.ctab',
-            message=str(e)
-        )
+        return {"status": "error creating template.ctab", "message": str(e)}
         
         
     # Generate a ProvisoHD call
@@ -839,19 +823,13 @@ def run_contingency_analysis() -> Dict[str, Any]:
             f.write('exit\n')
         
     except Exception as e:
-        return PowerError(
-            status='error creating run.bat',
-            message=str(e)
-        )
+        return {"status": "error creating run.bat", "message": str(e)}
         
     # Generate a system call to run ProvisoHD
     try:
         iret = subprocess.run(os.getcwd()+"\\run.bat", capture_output=True, text=True, check=True, shell=True)
     except Exception as e:
-        return PowerError(
-            status='error running ProvisoHD',
-            message=str(e)
-        )
+        return {"status": "error running ProvisoHD", "message": str(e)}
         
     # Return the contingency analysis results.
     VoltageViolations = pd.read_excel("Output.xlsx", sheet_name="VoltageViolations").to_dict(orient='dict')

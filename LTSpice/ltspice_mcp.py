@@ -35,9 +35,9 @@ from pathlib import Path
 # --- Third-Party Imports ---
 # `fastmcp` is for creating the MCP server.
 try:
-    from fastmcp import FastMCP
+    from mcp.server.fastmcp import FastMCP
 except ImportError:
-    sys.exit("Error: FastMCP library not found. Please run 'pip install fastmcp'.")
+    sys.exit("Error: mcp library not found. Please run 'pip install mcp'.")
 
 # `matplotlib` is used for plotting simulation results.
 try:
@@ -70,8 +70,10 @@ logging.basicConfig(
 # =============================================================================
 # --- IMPORTANT: USER CONFIGURATION REQUIRED ---
 # The user must set this path to their LTspice executable.
-# This example is for a typical Wine installation on macOS.
-LTSPICE_EXECUTABLE_PATH = "/Users/maanasgoel/.wine/drive_c/Users/maanasgoel/AppData/Local/Programs/ADI/LTspice/LTspice.exe"
+# Default for Windows:
+LTSPICE_EXECUTABLE_PATH = r"C:\Program Files\LTC\LTspiceXVII\XVIIx64.exe"
+# For macOS/Linux with Wine, it might look like:
+# LTSPICE_EXECUTABLE_PATH = "/Users/username/.wine/drive_c/Users/username/AppData/Local/Programs/ADI/LTspice/LTspice.exe"
 
 # On macOS/Linux, Wine is required to run the Windows version of LTSpice.
 WINE_COMMAND = "wine"
@@ -151,7 +153,10 @@ async def run_simulation(netlist_path: str, session_dir: str) -> dict:
 
     try:
         netlist_filename = os.path.basename(netlist_path)
-        cmd = [WINE_COMMAND, LTSPICE_EXECUTABLE_PATH, "-b", netlist_filename]
+        if sys.platform == "win32":
+            cmd = [LTSPICE_EXECUTABLE_PATH, "-b", netlist_filename]
+        else:
+            cmd = [WINE_COMMAND, LTSPICE_EXECUTABLE_PATH, "-b", netlist_filename]
 
         process = subprocess.run(
             cmd, cwd=session_dir, capture_output=True, text=True, check=False
@@ -315,7 +320,10 @@ async def view_netlist_in_ltspice(netlist_path: str) -> dict:
         return {"status": "error", "message": f"Netlist file not found: '{netlist_path}'"}
 
     try:
-        cmd = [WINE_COMMAND, LTSPICE_EXECUTABLE_PATH, os.path.abspath(netlist_path)]
+        if sys.platform == "win32":
+            cmd = [LTSPICE_EXECUTABLE_PATH, os.path.abspath(netlist_path)]
+        else:
+            cmd = [WINE_COMMAND, LTSPICE_EXECUTABLE_PATH, os.path.abspath(netlist_path)]
         subprocess.Popen(cmd)
         message = (f"🚀 LTspice launched successfully with {os.path.basename(netlist_path)}.\n"
                    f"💡 Note: The circuit is a text netlist, so no visual schematic will appear.")
@@ -337,12 +345,10 @@ if __name__ == "__main__":
     # Perform a self-check on startup to ensure the environment is configured.
     is_valid, message = check_ltspice_executable()
     if not is_valid:
-        print(f"--- LTSpice MCP Server Startup ERROR ---", file=sys.stderr)
-        print(f"Error: {message}", file=sys.stderr)
-        print(f"Please correct the configuration in the script before running.", file=sys.stderr)
-        sys.exit(1)
+        logging.warning(f"LTSpice executable not found: {message}")
+        logging.warning("Simulation tools will return errors, but other tools will still work.")
 
-    # If the environment is valid, start the server.
+    # Start the server.
     # The server will announce its tools to the connected MCP client (e.g., Cursor).
     logging.info("LTspice MCP server starting...")
     mcp.run()

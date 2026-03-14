@@ -58,18 +58,18 @@ ollama serve
 go install github.com/mark3labs/mcphost@latest
 ```
 3) Setup your config.json file
-Open your config.json file in a text editor. In the JSON list of tools, add the Powerflow programs you have installed on your computer. For example, PSLF
+Open your config.json file in a text editor. In the JSON list of tools, add the Powerflow programs you have installed on your computer. For example, pandapower:
 ```
 {
   "mcpServers": {
-    "pslf": {
+    "pandapower": {
       "command": "python",
-      "args": ["PSLF/pslf_mcp.py"]
+      "args": ["pandapower/panda_mcp.py"]
     }
   }
 }
 ```
-Or for PowerWorld.
+Or for PowerWorld:
 ```
 {
   "mcpServers": {
@@ -87,7 +87,7 @@ mcphost -m ollama:qwen3:4b --config .\config.json --system-prompt .\system-promp
 
 To run a test prompt that runs the LLM through a test and saves the output to a report, use the following command.
 ```
-mcphost script pslf_test.prompt
+mcphost script pandapower_test.prompt
 ```
 
 ### Video Demos
@@ -115,43 +115,11 @@ Check out these helpful tutorials to get started with MCP:
 - [**Cursor MCP Tutorial**](https://cursor.com/docs/context/mcp): Learn how to use MCP with Cursor.
 - [**Other Protocol**](https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf): Open AI Function Calling Tool
 
-### Using with LLMs
+### Testing with your LLMs
 
-To use these MCP tools with an LLM:
+For setup instructions and configuration details, see the **[PowerMCP Tutorial PDF](PowerMCP_Tutorial.pdf)**.
 
-1. Install the MCP Python SDK:
-```bash
-pip install mcp-server-git
-```
-
-2. Run your MCP server:
-```bash
-python your_server.py
-```
-
-3. Configure your LLM application (e.g., [Claude Desktop](https://claude.ai/download), [Cursor](https://www.cursor.com/)) to use the MCP server:
-```json
-{
-  "mcpServers": {
-    "servername": {
-      "command": "python",
-      "args": ["your_server.py"]
-    }
-  }
-}
-```
-
-For instance, for `pandapower` you could configure the server as follows:
-```json
-{
-  "mcpServers": {
-    "pandapower": {
-      "command": "python",
-      "args": ["pandapower/panda_mcp.py"]
-    }
-  }
-}
-```
+**Important:** All our MCPs have been and should be tested via Claude Desktop before submitting a PR to ensure consistency.
 
 ## 📚 Documentation
 

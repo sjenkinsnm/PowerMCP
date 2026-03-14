@@ -1,8 +1,84 @@
 {
   "mcpServers": {
+    "andes": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "yourpath\\python.exe",
+        "your path\\PowerMCP\\ANDES\\andes_mcp.py"
+      ]
+    },
+    "egret": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "yourpath\\python.exe",
+        "yourpath\\PowerMCP\\Egret\\egret_mcp.py"
+      ]
+    },
+    "opendss": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "yourpath\\python.exe",
+        "yourpath\\PowerMCP\\OpenDSS\\opendss_mcp.py"
+      ]
+    },
+    "pandapower": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "yourpath\\python.exe",
+        "yourpath\\PowerMCP\\pandapower\\panda_mcp.py"
+      ]
+    },
+    "powerworld": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "yourpath\\python.exe",
+        "yourpath\\PowerMCP\\PowerWorld\\powerworld_mcp.py"
+      ]
+    },
     "pslf": {
-      "command": "python",
-      "args": ["PSLF/pslf_mcp.py"]
+      "command": "cmd",
+      "args": [
+        "/c",
+        "yourpath\\python.exe",
+        "yourpath\\PowerMCP\\PSLF\\pslf_mcp.py"
+      ]
+    },
+    "psse": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "yourpath\\python.exe",
+        "yourpath\\PowerMCP\\PSSE\\psse_mcp.py"
+      ]
+    },
+    "ltspice": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "yourpath\\python.exe",
+        "yourpath\\PowerMCP\\LTSpice\\ltspice_mcp.py"
+      ]
+    },
+    "pypsa": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "yourpath\\python.exe",
+        "yourpath\\PowerMCP\\PyPSA\\pypsa_mcp.py"
+      ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "yourpath\\PowerMCP"
+      ]
     }
   }
 }

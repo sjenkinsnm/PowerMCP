@@ -1,7 +1,54 @@
+# Environments
 .venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python
 **/__pycache__/**
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# AI Tools
 .claude/
 .gemini/
+.cursor/
+
+# Personal Configuration
+myconfig.json
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Power System Tools Output & Temporary Files
+
+# PSLF / ProvisoHD
 soln.log
 output.crf
 output.sum
@@ -28,3 +75,32 @@ summer.drw
 summer.sav
 hs_err*
 basecase.sav
+temp.sav
+
+# PyLTSpice
+simulation_output/
+*.raw
+*.net
+*.log
+*.plt
+
+# ANDES
+.andes_runs/
+mcp_server.log
+pf_*/
+td_*/
+eig_*/
+
+# PyPSA
+*.nc
+
+# PowerWorld
+*.pwd
+# Note: .pwb files might be case files you want to keep (like IEEE 39 bus.pwb), 
+# so we don't ignore them globally.
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+

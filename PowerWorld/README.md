@@ -1,9 +1,35 @@
-# PowerWorld MCP Python Integration
+# PowerWorld MCP Server
+
+MCP server for PowerWorld Simulator via Easy SimAuto (ESA), enabling power flow analysis, contingency evaluation, and system studies.
 
 ## Requirements
 
-- [Easy SimAuto (ESA)](https://github.com/mzy2240/ESA)
 - Python 3.10 or higher
+- [Easy SimAuto (ESA)](https://github.com/mzy2240/ESA)
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+Run the MCP server:
+```bash
+python powerworld_mcp.py
+```
+
+Configure in your MCP client (e.g., Cursor, Claude Desktop):
+```json
+{
+  "mcpServers": {
+    "powerworld": {
+      "command": "python",
+      "args": ["PowerWorld/powerworld_mcp.py"]
+    }
+  }
+}
+```
 
 ## Available Tools
 
@@ -21,12 +47,12 @@
 - **determine_shortest_path(start: str, end: str, branch_distance_measure: str = "X", branch_filter: str = "ALL")**: Find the shortest path between two buses.
 - **run_robustness_analysis()**: Perform robustness analysis on the power system.
 - **get_ptdf_matrix_fast()**: Get the Power Transfer Distribution Factors (PTDF) matrix using fast calculation method.
-- **Users can add more features based on PowerWorld python API**
 
 ## Prompt Example
 
-- Could you perform an N-1 contingency analysis using PowerWorld on the case file "IEEE 39 bus.pwb"? Based on the results, please provide suggestions for enhancing the system's security.
+Could you perform an N-1 contingency analysis using PowerWorld on the case file "yourpath\PowerMCP\PowerWorld\IEEE 39 bus.pwb"? Based on the results, please provide suggestions for enhancing the system's security.
 
 ## Resources
+
 - [Easy SimAuto (ESA) Documentation](https://github.com/mzy2240/ESA)
 - [PowerWorld Simulator](https://www.powerworld.com/)
