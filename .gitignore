@@ -104,3 +104,5 @@ eig_*/
 .coverage
 htmlcov/
 
+# PSCAD generated docs (can be re-synced)
+PSCAD/docs/**
