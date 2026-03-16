@@ -23,8 +23,22 @@ class RobustExecutor:
         func_name = getattr(func, "__name__", str(func))
 
         def wrapped_call():
-            with self.lock:
-                return func(*args, **kwargs)
+            # Initialize COM for this thread (required for WMI/PSCAD on Windows)
+            try:
+                import pythoncom
+                pythoncom.CoInitialize()
+            except ImportError:
+                pass
+                
+            try:
+                with self.lock:
+                    return func(*args, **kwargs)
+            finally:
+                try:
+                    import pythoncom
+                    pythoncom.CoUninitialize()
+                except ImportError:
+                    pass
 
         try:
             return await asyncio.wait_for(

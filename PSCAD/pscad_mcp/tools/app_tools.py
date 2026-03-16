@@ -1,9 +1,9 @@
 from typing import List, Dict, Any, Optional
 import os
 from mcp.server.fastmcp import FastMCP
-from ..core.connection_manager import pscad_manager
-from ..core.executor import robust_executor
-from ..utils.doc_manager import doc_manager
+from pscad_mcp.core.connection_manager import pscad_manager
+from pscad_mcp.core.executor import robust_executor
+from pscad_mcp.utils.doc_manager import doc_manager
 import mhi.pscad
 
 async def get_local_pscad() -> str:

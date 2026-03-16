@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional
 from mcp.server.fastmcp import FastMCP
-from ..core.connection_manager import pscad_manager
-from ..core.executor import robust_executor
+from pscad_mcp.core.connection_manager import pscad_manager
+from pscad_mcp.core.executor import robust_executor
 
 async def list_simulation_sets(project_name: str) -> List[str]:
     """List all simulation sets defined in a project."""

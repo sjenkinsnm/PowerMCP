@@ -2,8 +2,8 @@ from typing import Dict, Any
 import os
 import logging
 from mcp.server.fastmcp import FastMCP
-from ..core.connection_manager import pscad_manager
-from ..core.executor import robust_executor
+from pscad_mcp.core.connection_manager import pscad_manager
+from pscad_mcp.core.executor import robust_executor
 
 # PSOUT availability check
 try:

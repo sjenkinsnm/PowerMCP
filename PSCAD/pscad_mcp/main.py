@@ -1,9 +1,18 @@
 import logging
+import sys
+import os
 from mcp.server.fastmcp import FastMCP
-from .tools.app_tools import register_app_tools
-from .tools.project_tools import register_project_tools
-from .tools.data_tools import register_data_tools
-from .tools.simset_tools import register_simset_tools
+
+# Add the parent directory to sys.path to allow absolute imports when run as a script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
+from pscad_mcp.tools.app_tools import register_app_tools
+from pscad_mcp.tools.project_tools import register_project_tools
+from pscad_mcp.tools.data_tools import register_data_tools
+from pscad_mcp.tools.simset_tools import register_simset_tools
 
 # Configure central logging
 logging.basicConfig(

@@ -2,7 +2,7 @@ import psutil
 import logging
 from typing import Optional
 import mhi.pscad
-from .executor import robust_executor
+from pscad_mcp.core.executor import robust_executor
 
 logger = logging.getLogger("pscad-mcp.connection")
 
