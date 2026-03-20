@@ -114,6 +114,144 @@ def run_power_flow(network_name: str, linear: bool = False) -> Dict[str, Any]:
         }
 
 @mcp.tool()
+def run_contingency_analysis(
+    network_name: str,
+    contingency_elements: Optional[List[str]] = None,
+    v_min_pu: float = 0.95,
+    v_max_pu: float = 1.05,
+    line_max_loading_pct: float = 100.0,
+) -> Dict[str, Any]:
+    """Run N-1 contingency analysis on the network.
+
+    Outages each line/transformer one at a time, runs AC power flow,
+    and checks for voltage and thermal violations.
+    """
+    try:
+        # --- Base case ---
+        network = Network(network_name)
+        network.pf(use_seed=True)
+
+        base_v = network.buses_t.v_mag_pu.iloc[0]
+        base_p0 = network.lines_t.p0.iloc[0]
+        base_q0 = network.lines_t.q0.iloc[0]
+        base_s_nom = network.lines.s_nom
+        base_loading = np.sqrt(base_p0**2 + base_q0**2) / base_s_nom * 100
+        base_loading = base_loading.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+
+        base_case = {
+            "converged": True,
+            "min_voltage_pu": float(base_v.min()),
+            "max_voltage_pu": float(base_v.max()),
+            "max_line_loading_pct": float(base_loading.max()),
+        }
+
+        # --- Determine contingency elements ---
+        if contingency_elements is None:
+            elements = []
+            for line_id in network.lines.index:
+                elements.append(("line", line_id))
+            for trafo_id in network.transformers.index:
+                elements.append(("transformer", trafo_id))
+        else:
+            elements = []
+            for elem_id in contingency_elements:
+                if elem_id in network.lines.index:
+                    elements.append(("line", elem_id))
+                elif elem_id in network.transformers.index:
+                    elements.append(("transformer", elem_id))
+                else:
+                    return {
+                        "status": "error",
+                        "message": f"Element '{elem_id}' not found in lines or transformers",
+                    }
+
+        # --- Run contingencies ---
+        contingencies = []
+        non_converged = 0
+        with_violations = 0
+
+        for elem_type, elem_id in elements:
+            n = Network(network_name)
+
+            if elem_type == "line":
+                n.lines.at[elem_id, "active"] = False
+            else:
+                n.transformers.at[elem_id, "active"] = False
+
+            try:
+                pf_result = n.pf(use_seed=True)
+                converged = bool(pf_result["converged"].iloc[0, 0])
+            except Exception:
+                converged = False
+
+            if not converged:
+                non_converged += 1
+                contingencies.append({
+                    "id": elem_id,
+                    "element_type": elem_type,
+                    "converged": False,
+                    "voltage_violations": [],
+                    "loading_violations": [],
+                })
+                with_violations += 1
+                continue
+
+            # Check voltage violations
+            v_mag = n.buses_t.v_mag_pu.iloc[0]
+            voltage_violations = []
+            for bus in v_mag.index:
+                v = float(v_mag[bus])
+                if v < v_min_pu or v > v_max_pu:
+                    voltage_violations.append({"bus": bus, "vm_pu": round(v, 4)})
+
+            # Check thermal violations
+            p0 = n.lines_t.p0.iloc[0]
+            q0 = n.lines_t.q0.iloc[0]
+            s_nom = n.lines.s_nom
+            loading = np.sqrt(p0**2 + q0**2) / s_nom * 100
+            loading = loading.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+
+            loading_violations = []
+            for line_id_inner in loading.index:
+                pct = float(loading[line_id_inner])
+                if pct > line_max_loading_pct:
+                    loading_violations.append({
+                        "line": line_id_inner,
+                        "loading_pct": round(pct, 2),
+                    })
+
+            has_violations = len(voltage_violations) > 0 or len(loading_violations) > 0
+            if has_violations:
+                with_violations += 1
+
+            contingencies.append({
+                "id": elem_id,
+                "element_type": elem_type,
+                "converged": True,
+                "voltage_violations": voltage_violations,
+                "loading_violations": loading_violations,
+            })
+
+        total = len(elements)
+        return _to_serializable({
+            "status": "success",
+            "message": f"N-1 contingency analysis completed. {with_violations} of {total} contingencies have violations.",
+            "base_case": base_case,
+            "contingencies": contingencies,
+            "summary": {
+                "total_contingencies": total,
+                "with_violations": with_violations,
+                "non_converged": non_converged,
+            },
+        })
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Contingency analysis failed: {str(e)}",
+        }
+
+
+@mcp.tool()
 def get_component_details(
     network_name: str,
     component_type: str,
