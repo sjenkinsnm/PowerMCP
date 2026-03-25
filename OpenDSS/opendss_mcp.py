@@ -32,7 +32,7 @@ def compile_and_solve(dss_file: str) -> Dict[str, bool]:
         }
 
 @mcp.tool()
-def get_total_power() -> Dict[str, Union[List[float], str]]:
+def get_total_power() -> Dict[str, Union[List[float], str, bool]]:
     """
     Get the total power from the current circuit
     
@@ -75,7 +75,7 @@ def set_load_multiplier(load_mult: float) -> Dict[str, Union[float, str]]:
         }
 
 @mcp.tool()
-def get_bus_voltages() -> Dict[str, Union[list, str]]:
+def get_bus_voltages() -> Dict[str, Union[bool, list, str]]:
     """
     Get per-unit voltages for all nodes in the circuit
     
