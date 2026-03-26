@@ -33,62 +33,6 @@ We're building an open-source community focused on accelerating AI adoption in t
 
 *This comprehensive tutorial will walk you through everything you need to know to begin using PowerMCP effectively.*
 
-#### Easy Fully Offline Quick Start - No API Keys
-
-Using commericial AI models in Claude Desktop or Cursor.ai is great, but if your company security policies dictate, you can run these models fully offline and keep your confidential power flow information private, away from prying eyes.
-
-##### Ollama setup for local AI model
-
-1) Install Ollama from https://ollama.com/download/windows
-
-2) From the model dropdown box, download a tool-capable AI model like GPT-oss or qwen3
-
-You might have trouble downloading the models from online through Ollama. You can copy the models from another machine if you zip your %USERPROFILE%/.ollama/models folder and bring it from a machine that has network access to HuggingFace.
-
-3) Serve the model by enabling the option in Ollama settings or by running
-`
-ollama serve
-`
-##### MCPHost for local MCP protocol handling
-
-1) Install the GO programming language from https://go.dev/dl
-
-2) Clone the MCPHost program from Github using
-```
-go install github.com/mark3labs/mcphost@latest
-```
-3) Setup your config.json file
-Open your config.json file in a text editor. In the JSON list of tools, add the Powerflow programs you have installed on your computer. For example, PSLF
-```
-{
-  "mcpServers": {
-    "pslf": {
-      "command": "python",
-      "args": ["PSLF/pslf_mcp.py"]
-    }
-  }
-}
-```
-Or for PowerWorld.
-```
-{
-  "mcpServers": {
-    "powerworld": {
-      "command": "python",
-      "args": ["PowerWorld/powerworld_mcp.py"]
-    }
-  }
-}
-```
-4) Start the MCP server in interactive mode, use the following command. Replace the model name and config file with your preferred option.
-```
-mcphost -m ollama:qwen3:4b --config .\config.json --system-prompt .\system-prompt.md
-```
-
-To run a test prompt that runs the LLM through a test and saves the output to a report, use the following command.
-```
-mcphost script pslf_test.prompt
-```
 
 To run with an Ollama server on your local network, set OLLAMA_HOST environment variable to your IP or set --provider-url
 ```
@@ -125,43 +69,28 @@ Check out these helpful tutorials to get started with MCP:
 - [**Cursor MCP Tutorial**](https://cursor.com/docs/context/mcp): Learn how to use MCP with Cursor.
 - [**Other Protocol**](https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf): Open AI Function Calling Tool
 
-### Using with LLMs
+### Testing with your LLMs
 
-To use these MCP tools with an LLM:
+> **Note:** All MCPs should be tested via Claude Desktop before submitting a PR to ensure consistency.
 
-1. Install the MCP Python SDK:
-```bash
-pip install mcp-server-git
-```
+Open `config.json` and add the MCP servers for the power system tools you have installed. For example:
 
-2. Run your MCP server:
-```bash
-python your_server.py
-```
-
-3. Configure your LLM application (e.g., [Claude Desktop](https://claude.ai/download), [Cursor](https://www.cursor.com/)) to use the MCP server:
-```json
-{
-  "mcpServers": {
-    "servername": {
-      "command": "python",
-      "args": ["your_server.py"]
-    }
-  }
-}
-```
-
-For instance, for `pandapower` you could configure the server as follows:
 ```json
 {
   "mcpServers": {
     "pandapower": {
       "command": "python",
       "args": ["pandapower/panda_mcp.py"]
+    },
+    "powerworld": {
+      "command": "python",
+      "args": ["PowerWorld/powerworld_mcp.py"]
     }
   }
 }
 ```
+
+Then, follow the setup instructions and configuration details in **[PowerMCP Tutorial PDF](PowerMCP_Tutorial.pdf)**.
 
 ## 📚 Documentation
 
@@ -181,7 +110,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 ### Core Team
-- [Qian Zhang](https://www.linkedin.com/in/qian-zhang-75323111b/), [Muhy Eddin Za’ter](https://scholar.google.com/citations?user=_IFFYFAAAAAJ&hl=en), [Stephen Jenkins](https://www.linkedin.com/in/stephenjenkins2/), [Maanas Goel](https://www.linkedin.com/in/maanas-goel/)
+- [Qian Zhang](https://www.linkedin.com/in/qian-zhang-75323111b/), [Muhy Eddin Za’ter](https://scholar.google.com/citations?user=_IFFYFAAAAAJ&hl=en), [Steven Black](https://www.linkedin.com/in/steven-black-09322b31/), [Luan Lopes dos Santos](https://www.linkedin.com/in/luan-lopes/), [Paulo Radatz](https://www.linkedin.com/in/pauloradatz/), [Stephen Jenkins](https://www.linkedin.com/in/stephenjenkins2/), [Maanas Goel](https://www.linkedin.com/in/maanas-goel/)
 
 ### Special Thanks
 - All contributors who help make this project better

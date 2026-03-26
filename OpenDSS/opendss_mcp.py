@@ -1,10 +1,8 @@
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mcp.server.fastmcp import FastMCP
 import py_dss_interface
 from typing import List, Dict, Union, Optional
-from common.utils import PowerError, power_mcp_tool
 
 # Create global DSS instance
 dss = py_dss_interface.DSS()
@@ -12,7 +10,7 @@ dss = py_dss_interface.DSS()
 # Create an MCP server
 mcp = FastMCP("PyDSS-MCP")
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def compile_and_solve(dss_file: str) -> Dict[str, bool]:
     """
     Compile an OpenDSS file and solve the circuit
@@ -28,13 +26,13 @@ def compile_and_solve(dss_file: str) -> Dict[str, bool]:
         dss.text("solve")
         return {"success": True}
     except Exception as e:
-        return PowerError(
-            status="error",
-            message=str(e)
-        )
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
-@power_mcp_tool(mcp)
-def get_total_power() -> Dict[str, Union[List[float], str]]:
+@mcp.tool()
+def get_total_power() -> Dict[str, Union[List[float], str, bool]]:
     """
     Get the total power from the current circuit
     
@@ -49,12 +47,12 @@ def get_total_power() -> Dict[str, Union[List[float], str]]:
             "units": "kW, kVAr"
         }
     except Exception as e:
-        return PowerError(
-            status="error",
-            message=str(e)
-        )
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def set_load_multiplier(load_mult: float) -> Dict[str, Union[float, str]]:
     """
     Set the load multiplier and solve the circuit
@@ -71,13 +69,13 @@ def set_load_multiplier(load_mult: float) -> Dict[str, Union[float, str]]:
         min_v = min(dss.circuit.buses_vmag_pu)
         return {"success": True, "min_v_pu": min_v}
     except Exception as e:
-        return PowerError(
-            status="error",
-            message=str(e)
-        )
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
-@power_mcp_tool(mcp)
-def get_bus_voltages() -> Dict[str, Union[list, str]]:
+@mcp.tool()
+def get_bus_voltages() -> Dict[str, Union[bool, list, str]]:
     """
     Get per-unit voltages for all nodes in the circuit
     
@@ -89,12 +87,12 @@ def get_bus_voltages() -> Dict[str, Union[list, str]]:
         voltages = dss.circuit.buses_vmag_pu
         return {"success": True, "nodes": nodes, "voltages_pu": voltages}
     except Exception as e:
-        return PowerError(
-            status="error",
-            message=str(e)
-        )
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def run_daily_energy_meter(meter_name: str = "Feeder", hours: int = 24) -> Dict[str, Union[list, str]]:
     """
     Run a daily simulation and return total energy (kWh) from the specified energy meter for each hour
@@ -118,12 +116,12 @@ def run_daily_energy_meter(meter_name: str = "Feeder", hours: int = 24) -> Dict[
             energy.append(dss.meters.register_values[0])
         return {"success": True, "energy_kwh": energy}
     except Exception as e:
-        return PowerError(
-            status="error",
-            message=str(e)
-        )
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_harmonic_results(load_name: str, harmonic: int) -> Dict[str, Union[float, str]]:
     """
     Get the magnitude and angle of current and voltage for a specific load and harmonic order
@@ -150,10 +148,10 @@ def get_harmonic_results(load_name: str, harmonic: int) -> Dict[str, Union[float
             "harmonic": harmonic
         }
     except Exception as e:
-        return PowerError(
-            status="error",
-            message=str(e)
-        )
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
 if __name__ == "__main__":
     mcp.run(transport="stdio") 

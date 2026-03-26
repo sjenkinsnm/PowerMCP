@@ -1,0 +1,6 @@
+# Core MCP dependencies
+mcp
+
+# Circuit simulation dependencies
+matplotlib
+PyLTSpice

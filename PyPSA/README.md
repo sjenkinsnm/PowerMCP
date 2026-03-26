@@ -14,7 +14,31 @@ A comprehensive Model Context Protocol (MCP) server for PyPSA (Python for Power 
   - `cartopy` for geographic plotting
   - `networkx` for network analysis
 
-### Functionalities
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+Run the MCP server:
+```bash
+python pypsa_mcp.py
+```
+
+Configure in your MCP client (e.g., Cursor, Claude Desktop):
+```json
+{
+  "mcpServers": {
+    "pypsa": {
+      "command": "python",
+      "args": ["PyPSA/pypsa_mcp.py"]
+    }
+  }
+}
+```
+
+## Available Tools
 
 - [x] `get_network_info` - Get basic network statistics (buses, generators, loads, etc.)
 - [x] `get_component_details` - Get detailed information about specific components
@@ -24,8 +48,13 @@ A comprehensive Model Context Protocol (MCP) server for PyPSA (Python for Power 
 - [x] `add_load` - Add electrical loads to buses
 - [x] `add_line` - Add transmission lines between buses
 - [x] `add_storage_unit` - Add battery storage or pumped hydro storage
+- [x] `load_network` - Load a PyPSA network from a NetCDF (.nc) file
+- [x] `run_power_flow` - Run AC or DC power flow calculations
+- [x] `optimize_network` - Run Linear Optimal Power Flow (LOPF)
+- [x] `optimize_investment` - Run capacity expansion optimization
 - [x] `import_from_csv_folder` - Import network from CSV files
 - [x] `export_to_csv_folder` - Export network to CSV format
+- [x] `run_contingency_analysis` - N-1 contingency analysis
 
 # Future functionalities
 - [ ] `calculate_statistics` - Calculate capacity factors, line loading, and curtailment
@@ -36,10 +65,8 @@ A comprehensive Model Context Protocol (MCP) server for PyPSA (Python for Power 
 - [ ] `add_emission_limit` - Add CO2 emission constraints
 - [ ] `remove_component` - Remove components from network
 - [ ] `modify_component` - Update component parameters
-- [ ] `run_contingency_analysis` - N-1 contingency analysis
 - [ ] `calculate_ptdf` - Power Transfer Distribution Factors
 - [ ] `calculate_lodf` - Line Outage Distribution Factors
-- [ ] `run_power_flow` - Run AC or DC power flow calculations
 - [ ] `check_network_consistency` - Validate network connectivity
 - [ ] `sensitivity_analysis` - Parameter sensitivity studies
 - [ ] `monte_carlo_analysis` - Uncertainty analysis
@@ -66,8 +93,6 @@ A comprehensive Model Context Protocol (MCP) server for PyPSA (Python for Power 
 - [ ] `run_perfect_foresight` - Perfect foresight optimization
 - [ ] `stochastic_optimization` - Stochastic scenario optimization
 - [ ] `robust_optimization` - Robust optimization under uncertainty
-- [ ] `optimize_network` - Run Linear Optimal Power Flow (LOPF)
-- [ ] `optimize_investment` - Run capacity expansion optimization
 
 
 ## Testing

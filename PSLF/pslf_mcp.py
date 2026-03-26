@@ -60,10 +60,10 @@ def open_case(case: str, action: str = "", chatInput: str = "", tool: str = "", 
                 'status': 'error unknown'
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
 @power_mcp_tool(mcp)
 def save_case(action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
@@ -93,10 +93,10 @@ def save_case(action: str = "", chatInput: str = "", tool: str = "", toolCallId:
                 'status': 'error failed to save case'
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
 
 @power_mcp_tool(mcp)
 def solve_case(action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
@@ -152,10 +152,10 @@ def solve_case(action: str = "", chatInput: str = "", tool: str = "", toolCallId
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
 
 @power_mcp_tool(mcp)
 def add_bus(busnum: int, busname: str, nominalkv: float, type: int = 1, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
@@ -256,10 +256,10 @@ def add_bus(busnum: int, busname: str, nominalkv: float, type: int = 1, action: 
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
 
 @power_mcp_tool(mcp)
 def add_branch(frombus: int, tobus: int, reactance: float, circuit: str = "1 ", resistance: float = 0.0, susceptance: float = 0.0, rating: float = 9999.0, section: int = 1, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
@@ -386,10 +386,10 @@ def add_branch(frombus: int, tobus: int, reactance: float, circuit: str = "1 ", 
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
 
 @power_mcp_tool(mcp)
 def add_generator(bus: int, power_scheduled_mw: float, genid: str = "1 ", power_max: float = 9999.0, reactive_power_max: float = 9999.0, reactive_power_min: float = -9999.0, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
@@ -471,10 +471,10 @@ def add_generator(bus: int, power_scheduled_mw: float, genid: str = "1 ", power_
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
 @power_mcp_tool(mcp)
 def add_load(bus: int, real_power: float, reactive_power: float, loadid: str = "1 ", action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
@@ -554,10 +554,10 @@ def add_load(bus: int, real_power: float, reactive_power: float, loadid: str = "
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
 @power_mcp_tool(mcp)
 def add_shunt(bus: int, reactive_power: float, variable_flag: int = 0, reactive_max: float = 0.0, reactive_min: float = 0.0, shuntid: str = "1 ", action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
@@ -643,10 +643,10 @@ def add_shunt(bus: int, reactive_power: float, variable_flag: int = 0, reactive_
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
 
 
 @power_mcp_tool(mcp)
@@ -687,10 +687,10 @@ def get_voltage(bus: int, action: str = "", chatInput: str = "", tool: str = "",
                 }
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
 @power_mcp_tool(mcp)
 def get_voltage_violations(overvoltage_threshold: float = 1.05, undervoltage_threshold: float = 0.95, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
@@ -745,10 +745,10 @@ def get_voltage_violations(overvoltage_threshold: float = 1.05, undervoltage_thr
                 'undervoltage': undervoltage
             }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
 @power_mcp_tool(mcp)
 def get_overload_violations(overload_threshold: float = 1.0, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
@@ -796,10 +796,10 @@ def get_overload_violations(overload_threshold: float = 1.0, action: str = "", c
             'overload': overload
         }
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
         
 @power_mcp_tool(mcp)
 def run_contingency_analysis(action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
@@ -821,19 +821,16 @@ def run_contingency_analysis(action: str = "", chatInput: str = "", tool: str = 
     try:
         iret = Pslf.save_case(os.getcwd() + "\\sstools.sav")
     except Exception as e:
-        return PowerError(
-            status='error unknown',
-            message=str(e)
-        )
+        return {
+            'status': 'error unknown',
+            'message': str(e)
+        }
     
     # Generate a list of N-1 contingencies based on the case stored in the temporary file
     try:
         iret = Pslf.run_epcl(os.getcwd() + "\\PSLF\generate-otg.p")
     except Exception as e:
-        return PowerError(
-            status='error generate-otg.p not found',
-            message=str(e)
-        )
+        return {"status": "error generate-otg.p not found", "message": str(e)}
     
     # Generate a list of default criteria to evaluate the case with.
     try:
@@ -854,10 +851,7 @@ def run_contingency_analysis(action: str = "", chatInput: str = "", tool: str = 
         
         
     except Exception as e:
-        return PowerError(
-            status='error creating control.cntl',
-            message=str(e)
-        )
+        return {"status": "error creating control.cntl", "message": str(e)}
     
     # Generate the batch contingency run.
     try:
@@ -872,20 +866,14 @@ def run_contingency_analysis(action: str = "", chatInput: str = "", tool: str = 
         
         
     except Exception as e:
-        return PowerError(
-            status='error creating runs.cases',
-            message=str(e)
-        )
+        return {"status": "error creating runs.cases", "message": str(e)}
         
     # Run the batch of contingencies
     try:
         iret = Pslf.run_sstools("runs.cases")
         
     except Exception as e:
-        return PowerError(
-            status='error running SSTOOLS',
-            message=str(e)
-        )
+        return {"status": "error running SSTOOLS", "message": str(e)}
         
     # Generate the ProvisoHD batch data file
     try:
@@ -898,10 +886,7 @@ def run_contingency_analysis(action: str = "", chatInput: str = "", tool: str = 
             f.write('end\n')
         
     except Exception as e:
-        return PowerError(
-            status='error creating template.ctab',
-            message=str(e)
-        )
+        return {"status": "error creating template.ctab", "message": str(e)}
         
         
     # Generate a ProvisoHD call
@@ -915,19 +900,13 @@ def run_contingency_analysis(action: str = "", chatInput: str = "", tool: str = 
             f.write('exit\n')
         
     except Exception as e:
-        return PowerError(
-            status='error creating run.bat',
-            message=str(e)
-        )
+        return {"status": "error creating run.bat", "message": str(e)}
         
     # Generate a system call to run ProvisoHD
     try:
         iret = subprocess.run(os.getcwd()+"\\run.bat", capture_output=True, text=True, check=True, shell=True)
     except Exception as e:
-        return PowerError(
-            status='error running ProvisoHD',
-            message=str(e)
-        )
+        return {"status": "error running ProvisoHD", "message": str(e)}
         
     # Return the contingency analysis results.
     VoltageViolations = pd.read_excel("Output.xlsx", sheet_name="VoltageViolations").to_dict(orient='dict')

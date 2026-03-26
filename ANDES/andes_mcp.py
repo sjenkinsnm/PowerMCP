@@ -9,11 +9,9 @@ from pathlib import Path
 from contextlib import redirect_stdout, redirect_stderr
 from mcp.server.fastmcp import FastMCP
 from typing import Dict, Any
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from common.utils import PowerError, power_mcp_tool
 
-# Set up storage directory
-STORE_DIR = "C:\\Users\\ibm\\Documents\\GitHub\\PowerMCP\\ANDES"
+# Set up storage directory (relative to this script)
+STORE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".andes_runs")
 os.makedirs(STORE_DIR, exist_ok=True)
 
 # Configure logging
@@ -39,17 +37,7 @@ mcp = FastMCP("ANDES MCP Server")
 # Initialize system state
 system_state: Dict[str, Any] = {}
 
-@power_mcp_tool(mcp)
-def test_run_power_flow() -> Dict[str, Any]:
-    """Test the power flow analysis tool
-    
-    Returns:
-        Dict containing test results    
-    """
-    return run_power_flow("/Users/qianzhang/Documents/GitHub/PowerMCP/ANDES/kundur_full.json")
-
-
-@power_mcp_tool(mcp)
+@mcp.tool()
 def run_power_flow(file_path: str) -> Dict[str, Any]:
     """Run power flow analysis on a power system case
     
@@ -63,10 +51,10 @@ def run_power_flow(file_path: str) -> Dict[str, Any]:
         # Convert to absolute path if not already
         abs_file_path = os.path.abspath(file_path)
         if not os.path.exists(abs_file_path):
-            return PowerError(
-                status="error",
-                message=f"Input file not found: {abs_file_path}"
-            )
+            return {
+                "status": "error",
+                "message": f"Input file not found: {abs_file_path}"
+            }
 
         # Create a unique directory for this run
         run_dir = os.path.join(STORE_DIR, f"pf_{Path(abs_file_path).stem}")
@@ -121,12 +109,12 @@ def run_power_flow(file_path: str) -> Dict[str, Any]:
             
     except Exception as e:
         logger.error(f"Error in power flow analysis: {str(e)}")
-        return PowerError(
-            status="error",
-            message=str(e)
-        )
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def run_time_domain_simulation(step_size: float = 0.01, t_end: float = 10.0) -> Dict[str, Any]:
     """Run time domain simulation on the currently loaded power system
     
@@ -139,10 +127,10 @@ def run_time_domain_simulation(step_size: float = 0.01, t_end: float = 10.0) -> 
     """
     try:
         if 'current_system' not in system_state:
-            return PowerError(
-                status="error",
-                message="No power system currently loaded. Run power flow first."
-            )
+            return {
+                "status": "error",
+                "message": "No power system currently loaded. Run power flow first."
+            }
             
         ss = system_state['current_system']
         
@@ -198,12 +186,12 @@ def run_time_domain_simulation(step_size: float = 0.01, t_end: float = 10.0) -> 
             
     except Exception as e:
         logger.error(f"Error in time domain simulation: {str(e)}")
-        return PowerError(
-            status="error",
-            message=str(e)
-        )
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def run_eigenvalue_analysis(file_path: str) -> Dict[str, Any]:
     """Run eigenvalue analysis on a power system case
     
@@ -218,10 +206,10 @@ def run_eigenvalue_analysis(file_path: str) -> Dict[str, Any]:
         abs_file_path = os.path.abspath(file_path)
         
         if not os.path.exists(abs_file_path):
-            return PowerError(
-                status="error",
-                message=f"File not found: {file_path}"
-            )
+            return {
+                "status": "error",
+                "message": f"File not found: {file_path}"
+            }
             
         # Create a unique directory for this run
         run_dir = os.path.join(STORE_DIR, f"eig_{Path(abs_file_path).stem}")
@@ -275,12 +263,12 @@ def run_eigenvalue_analysis(file_path: str) -> Dict[str, Any]:
             
     except Exception as e:
         logger.error(f"Error in eigenvalue analysis: {str(e)}")
-        return PowerError(
-            status="error",
-            message=str(e)
-        )
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def get_system_info() -> Dict[str, Any]:
     """
     Get information about the currently loaded power system
@@ -289,10 +277,10 @@ def get_system_info() -> Dict[str, Any]:
         Dict containing system information
     """
     if 'current_system' not in system_state:
-        return PowerError(
-            status="error",
-            message="No power system currently loaded"
-        )
+        return {
+            "status": "error",
+            "message": "No power system currently loaded"
+        }
     
     try:
         # Capture stdout/stderr
@@ -315,10 +303,10 @@ def get_system_info() -> Dict[str, Any]:
         return info
     except Exception as e:
         logger.error(f"Error getting system info: {str(e)}")
-        return PowerError(
-            status="error",
-            message=str(e)
-        )
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
 
 if __name__ == "__main__":

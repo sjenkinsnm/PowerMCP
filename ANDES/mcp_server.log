@@ -1,8 +1,0 @@
-2025-05-04 22:15:38,705 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
-2025-05-04 22:23:22,710 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
-2025-05-04 22:23:23,483 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
-2025-05-04 22:24:53,874 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
-2025-05-04 22:24:54,614 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
-2025-05-04 22:28:45,180 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
-2025-05-04 22:28:50,842 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
-2025-05-04 22:28:50,843 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
