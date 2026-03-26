@@ -3,30 +3,22 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pandas as pd
 import subprocess
-#from mcp.server.fastmcp import FastMCP
-from fastmcp import FastMCP
-from common.utils import PowerError, power_mcp_tool
+from mcp.server.fastmcp import FastMCP
 from typing import Dict, List, Optional, Tuple, Any, Union
 
 # Initialize MCP server
 mcp = FastMCP("PSLF Positive Sequence Load Flow Program")
 
 from PSLF_PYTHON import *
-init_pslf(silent=True, working_directory=os.getcwd())
+init_pslf(silent=False, working_directory=os.getcwd())
 
-@power_mcp_tool(mcp)
-def open_case(case: str, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def open_case(case: str) -> Dict[str, Any]:
     """
     Open a PSLF case file.
     
     Args:
         case: Filename with .sav extension.
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
     
     Returns:
         Dict with status and case information
@@ -65,18 +57,11 @@ def open_case(case: str, action: str = "", chatInput: str = "", tool: str = "", 
             'message': str(e)
         }
         
-@power_mcp_tool(mcp)
-def save_case(action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def save_case() -> Dict[str, Any]:
     """
     Save a PSLF case file to temp.sav
-    Args:
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
-
+    
     Returns:
         Dict with status and case information
     """
@@ -98,18 +83,11 @@ def save_case(action: str = "", chatInput: str = "", tool: str = "", toolCallId:
             'message': str(e)
         }
 
-@power_mcp_tool(mcp)
-def solve_case(action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def solve_case() -> Dict[str, Any]:
     """
     Solves a powerflow case using PSLF.
-    Args:
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
-
+    
     Returns:
         Dict with status
     """
@@ -157,8 +135,8 @@ def solve_case(action: str = "", chatInput: str = "", tool: str = "", toolCallId
             'message': str(e)
         }
 
-@power_mcp_tool(mcp)
-def add_bus(busnum: int, busname: str, nominalkv: float, type: int = 1, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def add_bus(busnum: int, busname: str, nominalkv: float, type: int = 1) -> Dict[str, Any]:
     """
     Add a new bus to the power system model
     
@@ -167,12 +145,6 @@ def add_bus(busnum: int, busname: str, nominalkv: float, type: int = 1, action: 
         busname: A human readable name of the bus no longer than 12 characters in length.
         nominalkv: The nominal voltage of the bus in kilovolts.
         type: An integer flag where 0 = system slack bus, 1 = a load bus, and 2 = a generator bus. (default 1)
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
     
     Returns:
         Dict with status
@@ -261,8 +233,8 @@ def add_bus(busnum: int, busname: str, nominalkv: float, type: int = 1, action: 
             'message': str(e)
         }
 
-@power_mcp_tool(mcp)
-def add_branch(frombus: int, tobus: int, reactance: float, circuit: str = "1 ", resistance: float = 0.0, susceptance: float = 0.0, rating: float = 9999.0, section: int = 1, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def add_branch(frombus: int, tobus: int, reactance: float, circuit: str = "1 ", resistance: float = 0.0, susceptance: float = 0.0, rating: float = 9999.0, section: int = 1) -> Dict[str, Any]:
     """
     Add a new branch (transmission line, transformer, series capacitor, or series reactor) to the power system model
     
@@ -275,12 +247,6 @@ def add_branch(frombus: int, tobus: int, reactance: float, circuit: str = "1 ", 
         susceptance: A float representing the per unit susceptance of the transmission line. (default 0.0)
         rating: The maximum safe rating of the transmission line in MVA (default 9999.0)
         section: An integer that identifies a series element. A series capacitor or series reactor would be an additional section for example a series component with section=2
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
     
     Returns:
         Dict with status
@@ -391,8 +357,8 @@ def add_branch(frombus: int, tobus: int, reactance: float, circuit: str = "1 ", 
             'message': str(e)
         }
 
-@power_mcp_tool(mcp)
-def add_generator(bus: int, power_scheduled_mw: float, genid: str = "1 ", power_max: float = 9999.0, reactive_power_max: float = 9999.0, reactive_power_min: float = -9999.0, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def add_generator(bus: int, power_scheduled_mw: float, genid: str = "1 ", power_max: float = 9999.0, reactive_power_max: float = 9999.0, reactive_power_min: float = -9999.0) -> Dict[str, Any]:
     """
     Add a new generator to the case.
     
@@ -403,12 +369,6 @@ def add_generator(bus: int, power_scheduled_mw: float, genid: str = "1 ", power_
         power_max: Maximum real power that the generator can output in megawatts. (default 9999.0)
         reactive_power_max: Maximum reactive power that the generator can output in megavars. (default 9999.0)
         reactive_power_min: Minimum reactive power that the generator can output in megavars. Should be a negative number. If positive, change the input to be negative. (default -9999.0)
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
     
     Returns:
         Dict with status
@@ -476,8 +436,8 @@ def add_generator(bus: int, power_scheduled_mw: float, genid: str = "1 ", power_
             'message': str(e)
         }
         
-@power_mcp_tool(mcp)
-def add_load(bus: int, real_power: float, reactive_power: float, loadid: str = "1 ", action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def add_load(bus: int, real_power: float, reactive_power: float, loadid: str = "1 ") -> Dict[str, Any]:
     """
     Add a new load to the case.
     
@@ -486,12 +446,6 @@ def add_load(bus: int, real_power: float, reactive_power: float, loadid: str = "
         real_power: Amount of real power consumed by the load in megawatts. If user gives a per unit value, multiply by the system base MVA of 100 to get the quantity in megawatts.
         reactive_power: Amount of reactive power consumed by the load in megawatts. Inductive loads are positive and capacitive loads are negative. If the user does not specify inductive, capacitive, or provide the sign explicitly, assume the load is inductive.  If user gives a per unit value, multiply by the system base MVA of 100 to get the quantity in megavars.
         loadid: 2 character string that uniquely identifies the load when there are multiple loads attached to the same bus. (default "1 ")
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
     
     Returns:
         Dict with status
@@ -559,8 +513,8 @@ def add_load(bus: int, real_power: float, reactive_power: float, loadid: str = "
             'message': str(e)
         }
         
-@power_mcp_tool(mcp)
-def add_shunt(bus: int, reactive_power: float, variable_flag: int = 0, reactive_max: float = 0.0, reactive_min: float = 0.0, shuntid: str = "1 ", action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def add_shunt(bus: int, reactive_power: float, variable_flag: int = 0, reactive_max: float = 0.0, reactive_min: float = 0.0, shuntid: str = "1 ") -> Dict[str, Any]:
     """
     Add a new fixed or variable shunt to the case.
     
@@ -571,12 +525,6 @@ def add_shunt(bus: int, reactive_power: float, variable_flag: int = 0, reactive_
         reactive_max: Only used when variable_flag = 1. Numeric value representing the maximum injection of a variable shunt in MVAR. (default 0.0)
         reactive_min: Only used when variable_flag = 1. Numeric value representing the minimum output (maximum absorbtion) of a variable shunt in MVAR. (default 0.0)
         shuntid: 2 character string that uniquely identifies the shunt when there are multiple shunts attached to the same bus. (default "1 ")
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
     
     Returns:
         Dict with status
@@ -649,19 +597,13 @@ def add_shunt(bus: int, reactive_power: float, variable_flag: int = 0, reactive_
         }
 
 
-@power_mcp_tool(mcp)
-def get_voltage(bus: int, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def get_voltage(bus: int) -> Dict[str, Any]:
     """
     Queries the voltage of a single bus and reports in per unit. If checking multiple buses with thresholds, use get_voltage_violations function instead.
     
     Args:
         bus: Integer identifier of the desired bus to query voltage for.  Is not necessarily consecutive and could be larger than the number of buses in the case.
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
     
     Returns:
         Dict with status
@@ -692,20 +634,14 @@ def get_voltage(bus: int, action: str = "", chatInput: str = "", tool: str = "",
             'message': str(e)
         }
         
-@power_mcp_tool(mcp)
-def get_voltage_violations(overvoltage_threshold: float = 1.05, undervoltage_threshold: float = 0.95, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def get_voltage_violations(overvoltage_threshold: float = 1.05, undervoltage_threshold: float = 0.95) -> Dict[str, Any]:
     """
     Queries all bus voltages, compares against a threshold (default +/- 5%), and reports buses with voltage violations. For querying a single bus without thresholds, use get_voltage instead.
     
     Args:
         overvoltage_threshold: A float value representing the maximum tolerable voltage to check for in per unit. If the user provides percent, divide their input by 100 first. (default 1.05)
         undervoltage_threshold: A float value representing the lowest tolerable voltage to check for in per unit. If the user provides percent, divide their input by 100 first. (default 0.95)
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
     
     Returns:
         Dict with status
@@ -750,19 +686,13 @@ def get_voltage_violations(overvoltage_threshold: float = 1.05, undervoltage_thr
             'message': str(e)
         }
         
-@power_mcp_tool(mcp)
-def get_overload_violations(overload_threshold: float = 1.0, action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def get_overload_violations(overload_threshold: float = 1.0) -> Dict[str, Any]:
     """
     Queries a list of branches (transmission lines and transformers) with loading above a threshold (default 100%).
     
     Args:
         overload_threshold: A float value representing the maximum tolerable loading in per unit. (default 1.0) If user gives in percent, divide their input by 100 first.
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
     
     Returns:
         Dict with status
@@ -801,18 +731,11 @@ def get_overload_violations(overload_threshold: float = 1.0, action: str = "", c
             'message': str(e)
         }
         
-@power_mcp_tool(mcp)
-def run_contingency_analysis(action: str = "", chatInput: str = "", tool: str = "", toolCallId: str = "", sessionId: str = "", output: str = "") -> Dict[str, Any]:
+@mcp.tool()
+def run_contingency_analysis() -> Dict[str, Any]:
     """
     Generates N-1 contingencies, uses SSTOOLS to run all contingencies, and generates a cross tabulated table of results.
-    Args:
-        action: Not used (default "")
-        chatInput: Not used (default "")
-        tool: Not used (default "")
-        toolCallId: Not used (default "")
-        sessionId: Not used (default "")
-        output: Not used (default "")
-
+    
     Returns:
         Dict with status
     """
@@ -828,7 +751,7 @@ def run_contingency_analysis(action: str = "", chatInput: str = "", tool: str = 
     
     # Generate a list of N-1 contingencies based on the case stored in the temporary file
     try:
-        iret = Pslf.run_epcl(os.getcwd() + "\\PSLF\generate-otg.p")
+        iret = Pslf.run_epcl(os.getcwd() + "\\PSLF\\generate-otg.p")
     except Exception as e:
         return {"status": "error generate-otg.p not found", "message": str(e)}
     
@@ -921,5 +844,4 @@ def run_contingency_analysis(action: str = "", chatInput: str = "", tool: str = 
     
 
 if __name__ == "__main__":
-    #mcp.run(transport="stdio") # standard local machine host.
-    mcp.run(transport="http", host="192.168.1.39", port=8000) # use this to host on network instead of just local machine.
+    mcp.run(transport="stdio")

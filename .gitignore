@@ -37,6 +37,7 @@ MANIFEST
 
 # Personal Configuration
 myconfig.json
+config.json
 
 # IDEs and Editors
 .vscode/

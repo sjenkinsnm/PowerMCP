@@ -44,6 +44,17 @@ set OLLAMA_HOST=192.168.1.2:30068
 mcphost -m ollama:qwen3:4b --config .\config.json --system-prompt .\system-prompt.md
 ```
 
+To run with cloud models such as Gemini, set your API key and pass an argument to use their model. Google is cool because you can sign up free at https://aistudio.google.com/app/apikey and they have a very generous free tier assuming you keep under the rate limit.
+```
+set GOOGLE_API_KEY='your-google-key'        # For Google/Gemini
+mcphost -m google:gemini-2.0-flash --config .\config.json --system-prompt .\system-prompt.md
+set ANTHROPIC_API_KEY='your-anthropic-key'  # For Anthropic
+mcphost -m anthropic:claude-sonnet-4-5-20250929 --config .\config.json --system-prompt .\system-prompt.md
+set OPENAI_API_KEY='your-openai-key'        # For OpenAI
+mcphost -m openai:gpt-4 --config .\config.json --system-prompt .\system-prompt.md
+```
+
+
 ### Video Demos
 
 Check out these demos showcasing PowerMCP in action:

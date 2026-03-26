@@ -10,3 +10,7 @@
 [1216/203311.918:ERROR:shader_disk_cache.cc(612)] Shader Cache Creation failed: -2
 [1218/084634.124:ERROR:disk_cache.cc(185)] Unable to create cache
 [1218/084634.151:ERROR:shader_disk_cache.cc(612)] Shader Cache Creation failed: -2
+[0325/213615.876:ERROR:disk_cache.cc(185)] Unable to create cache
+[0325/213615.894:ERROR:shader_disk_cache.cc(612)] Shader Cache Creation failed: -2
+[0325/213740.495:ERROR:disk_cache.cc(185)] Unable to create cache
+[0325/213740.496:ERROR:shader_disk_cache.cc(612)] Shader Cache Creation failed: -2

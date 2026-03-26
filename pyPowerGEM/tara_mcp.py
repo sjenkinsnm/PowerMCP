@@ -12,7 +12,7 @@ mcp = FastMCP("PowerGEM TARA Steady State Powerflow Tool")
 import pyPowerGEM.pyTARA as pt
 tara = pt.taraAPI()
 
-@power_mcp_tool(mcp)
+@mcp.tool()
 def open_PSSEcase(case: str) -> Dict[str, Any]:
     """
     Open a PSSE35 format case file.
